@@ -1,172 +1,5 @@
-local Players = game:GetService("Players")
-local TweenService = game:GetService("TweenService")
-local UserInputService = game:GetService("UserInputService")
-
-local player = Players.LocalPlayer
-local Event = game:GetService("ReplicatedStorage"):WaitForChild("IncreaseSpeed")
-
-local auto = false
-
-
--- GUI
-local Gui = Instance.new("ScreenGui")
-Gui.Name = "ModernWinControl"
-Gui.ResetOnSpawn = false
-Gui.Parent = game:GetService("CoreGui")
-
-
-local Main = Instance.new("Frame")
-Main.Size = UDim2.new(0,460,0,340)
-Main.Position = UDim2.new(0.5,-230,0.5,-170)
-Main.BackgroundColor3 = Color3.fromRGB(15,15,22)
-Main.Active = true
-Main.Parent = Gui
-
-
-local Corner = Instance.new("UICorner")
-Corner.CornerRadius = UDim.new(0,20)
-Corner.Parent = Main
-
-
-local Stroke = Instance.new("UIStroke")
-Stroke.Color = Color3.fromRGB(90,110,220)
-Stroke.Thickness = 2
-Stroke.Parent = Main
-
-
-
--- Title
-local Title = Instance.new("TextLabel")
-Title.Size = UDim2.new(1,-70,0,50)
-Title.Position = UDim2.new(0,20,0,5)
-Title.BackgroundTransparency = 1
-Title.Text = "⚡ Win Control Panel"
-Title.Font = Enum.Font.GothamBold
-Title.TextSize = 24
-Title.TextColor3 = Color3.new(1,1,1)
-Title.TextXAlignment = Enum.TextXAlignment.Left
-Title.Parent = Main
-
-
-
--- Close button
-local Close = Instance.new("TextButton")
-Close.Size = UDim2.new(0,38,0,38)
-Close.Position = UDim2.new(1,-50,0,12)
-Close.Text = "×"
-Close.Font = Enum.Font.GothamBold
-Close.TextSize = 28
-Close.BackgroundColor3 = Color3.fromRGB(220,60,70)
-Close.TextColor3 = Color3.new(1,1,1)
-Close.Parent = Main
-
-Instance.new("UICorner",Close)
-
-
-Close.MouseButton1Click:Connect(function()
-	Gui:Destroy()
-end)
-
-
-
--- Tabs
-local Tabs = Instance.new("Frame")
-Tabs.Size = UDim2.new(1,-40,0,40)
-Tabs.Position = UDim2.new(0,20,0,60)
-Tabs.BackgroundTransparency = 1
-Tabs.Parent = Main
-
-
-local function MakeTab(text,x)
-
-	local b = Instance.new("TextButton")
-	b.Size = UDim2.new(.5,-5,1,0)
-	b.Position = UDim2.new(x,0,0,0)
-	b.Text = text
-	b.Font = Enum.Font.GothamBold
-	b.TextSize = 15
-	b.TextColor3 = Color3.new(1,1,1)
-	b.BackgroundColor3 = Color3.fromRGB(35,35,50)
-	b.Parent = Tabs
-
-	Instance.new("UICorner",b)
-
-	return b
-end
-
-
-local TeleTab = MakeTab("🏆 Teleports",0)
-local AutoTab = MakeTab("⚡ Auto",0.5)
-
-
-
--- Pages
-local function NewPage()
-
-	local p = Instance.new("Frame")
-	p.Size = UDim2.new(1,-40,1,-120)
-	p.Position = UDim2.new(0,20,0,110)
-	p.BackgroundTransparency = 1
-	p.Parent = Main
-
-	return p
-
-end
-
-
-local TelePage = NewPage()
-local AutoPage = NewPage()
-
-AutoPage.Visible = false
-
-
-
--- Button creator
-local function CreateButton(parent,text,y)
-
-	local b = Instance.new("TextButton")
-	b.Size = UDim2.new(1,0,0,35)
-	b.Position = UDim2.new(0,0,0,y)
-	b.Text = text
-	b.Font = Enum.Font.GothamMedium
-	b.TextSize = 15
-	b.TextColor3 = Color3.new(1,1,1)
-	b.BackgroundColor3 = Color3.fromRGB(35,35,50)
-	b.Parent = parent
-
-
-	local c = Instance.new("UICorner")
-	c.CornerRadius = UDim.new(0,10)
-	c.Parent = b
-
-
-	b.MouseEnter:Connect(function()
-		TweenService:Create(
-			b,
-			TweenInfo.new(.2),
-			{
-				BackgroundColor3 =
-				Color3.fromRGB(70,100,220)
-			}
-		):Play()
-	end)
-
-
-	b.MouseLeave:Connect(function()
-		TweenService:Create(
-			b,
-			TweenInfo.new(.2),
-			{
-				BackgroundColor3 =
-				Color3.fromRGB(35,35,50)
-			}
-		):Play()
-	end)
-
-
-	return b
-end
-
+--// Modern Win Panel Part 2
+--// Teleports + Auto + Dragging
 
 
 -- Teleport locations
@@ -177,21 +10,76 @@ local Spots = {
 	{"🏆 1 Win #3",579,414,11767},
 	{"🏆 1 Win #4",579,0,8948},
 
+	{"🏆 2 Wins #1",1475,0,10642},
+	{"🏆 2 Wins #2",1582,0,9120},
+	{"🏆 2 Wins #3",1495,0,10653},
+	{"🏆 2 Wins #4",1598,0,10857},
+
+	{"🏆 3 Wins #1",2619,0,11516},
+	{"🏆 3 Wins #2",2498,408,10230},
+	{"🏆 3 Wins #3",2625,18,11506},
+	{"🏆 3 Wins #4",2624,15,9416},
+
+	{"🏆 5 Wins #1",3634,21,10736},
+	{"🏆 5 Wins #2",3532,7,11130},
+	{"🏆 5 Wins #3",3649,372,8772},
+	{"🏆 5 Wins #4",3525,14,9302},
+
 	{"🏁 Race Finish",-1535,0,391},
 
-	{"🏆 350 Wins",13755,0,-18505},
+	{"🏆 350 Wins",0,0,0},
 
 }
 
 
 
-for i,v in ipairs(Spots) do
+local Buttons = {}
 
-	local button = CreateButton(
-		TelePage,
-		v[1],
-		(i-1)*40
-	)
+
+local function CreateTeleportButton(data)
+
+	local button = Instance.new("TextButton")
+
+	button.Size = UDim2.new(1,-10,0,38)
+	button.BackgroundColor3 = Color3.fromRGB(35,35,50)
+	button.Text = data[1]
+	button.Font = Enum.Font.GothamMedium
+	button.TextSize = 15
+	button.TextColor3 = Color3.new(1,1,1)
+	button.Parent = Scroll
+
+
+	local corner = Instance.new("UICorner")
+	corner.CornerRadius = UDim.new(0,10)
+	corner.Parent = button
+
+
+	button.MouseEnter:Connect(function()
+
+		TweenService:Create(
+			button,
+			TweenInfo.new(.15),
+			{
+				BackgroundColor3 =
+				Color3.fromRGB(70,100,220)
+			}
+		):Play()
+
+	end)
+
+
+	button.MouseLeave:Connect(function()
+
+		TweenService:Create(
+			button,
+			TweenInfo.new(.15),
+			{
+				BackgroundColor3 =
+				Color3.fromRGB(35,35,50)
+			}
+		):Play()
+
+	end)
 
 
 	button.MouseButton1Click:Connect(function()
@@ -201,22 +89,93 @@ for i,v in ipairs(Spots) do
 		if char and char:FindFirstChild("HumanoidRootPart") then
 
 			char.HumanoidRootPart.CFrame =
-			CFrame.new(v[2],v[3],v[4])
+			CFrame.new(
+				data[2],
+				data[3],
+				data[4]
+			)
 
 		end
 
 	end)
 
+
+	table.insert(Buttons,{
+		Button = button,
+		Name = string.lower(data[1])
+	})
+
 end
 
 
 
--- Auto clicker tab
-local AutoButton = CreateButton(
-	AutoPage,
-	"Auto Clicker: OFF",
-	40
-)
+for _,spot in ipairs(Spots) do
+	CreateTeleportButton(spot)
+end
+
+
+
+Layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+
+	Scroll.CanvasSize =
+	UDim2.new(
+		0,
+		0,
+		0,
+		Layout.AbsoluteContentSize.Y + 10
+	)
+
+end)
+
+
+
+-- Search filter
+Search:GetPropertyChangedSignal("Text"):Connect(function()
+
+	local text = string.lower(Search.Text)
+
+	for _,item in ipairs(Buttons) do
+
+		if text == "" or string.find(item.Name,text) then
+			item.Button.Visible = true
+		else
+			item.Button.Visible = false
+		end
+
+	end
+
+end)
+
+
+
+-- Auto page
+
+local AutoTitle = Instance.new("TextLabel")
+AutoTitle.Size = UDim2.new(1,0,0,40)
+AutoTitle.BackgroundTransparency = 1
+AutoTitle.Text = "⚡ Automation"
+AutoTitle.Font = Enum.Font.GothamBold
+AutoTitle.TextSize = 22
+AutoTitle.TextColor3 = Color3.new(1,1,1)
+AutoTitle.Parent = AutoPage
+
+
+
+local AutoButton = Instance.new("TextButton")
+AutoButton.Size = UDim2.new(1,0,0,45)
+AutoButton.Position = UDim2.new(0,0,0,60)
+AutoButton.BackgroundColor3 = Color3.fromRGB(35,35,50)
+AutoButton.Text = "Auto Clicker: OFF"
+AutoButton.Font = Enum.Font.GothamBold
+AutoButton.TextSize = 16
+AutoButton.TextColor3 = Color3.new(1,1,1)
+AutoButton.Parent = AutoPage
+
+
+local AutoCorner = Instance.new("UICorner")
+AutoCorner.CornerRadius = UDim.new(0,12)
+AutoCorner.Parent = AutoButton
+
 
 
 AutoButton.MouseButton1Click:Connect(function()
@@ -224,9 +183,13 @@ AutoButton.MouseButton1Click:Connect(function()
 	auto = not auto
 
 	if auto then
+
 		AutoButton.Text = "Auto Clicker: ON 🟢"
+
 	else
+
 		AutoButton.Text = "Auto Clicker: OFF 🔴"
+
 	end
 
 end)
@@ -238,10 +201,12 @@ task.spawn(function()
 	while Gui.Parent do
 
 		if auto then
+
 			Event:FireServer()
+
 		end
 
-		task.wait(0.1)
+		task.wait(.1)
 
 	end
 
@@ -250,49 +215,61 @@ end)
 
 
 -- Tabs
+
 TeleTab.MouseButton1Click:Connect(function()
+
 	TelePage.Visible = true
 	AutoPage.Visible = false
+
 end)
 
 
+
 AutoTab.MouseButton1Click:Connect(function()
+
 	TelePage.Visible = false
 	AutoPage.Visible = true
+
 end)
 
 
 
 -- Dragging
+
 local dragging = false
 local dragStart
-local startPos
+local startPosition
+
 
 
 Title.InputBegan:Connect(function(input)
 
-	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+	if input.UserInputType ==
+	Enum.UserInputType.MouseButton1 then
 
 		dragging = true
 		dragStart = input.Position
-		startPos = Main.Position
+		startPosition = Main.Position
 
 	end
 
 end)
 
 
+
 UserInputService.InputChanged:Connect(function(input)
 
-	if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+	if dragging and input.UserInputType ==
+	Enum.UserInputType.MouseMovement then
 
 		local delta = input.Position - dragStart
 
+
 		Main.Position = UDim2.new(
-			startPos.X.Scale,
-			startPos.X.Offset + delta.X,
-			startPos.Y.Scale,
-			startPos.Y.Offset + delta.Y
+			startPosition.X.Scale,
+			startPosition.X.Offset + delta.X,
+			startPosition.Y.Scale,
+			startPosition.Y.Offset + delta.Y
 		)
 
 	end
@@ -300,10 +277,14 @@ UserInputService.InputChanged:Connect(function(input)
 end)
 
 
+
 UserInputService.InputEnded:Connect(function(input)
 
-	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+	if input.UserInputType ==
+	Enum.UserInputType.MouseButton1 then
+
 		dragging = false
+
 	end
 
 end)
