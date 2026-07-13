@@ -1,3 +1,169 @@
+--// Modern Win Panel Part 1
+--// UI + Tabs + Teleport System Setup
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+
+local player = Players.LocalPlayer
+local Event = game:GetService("ReplicatedStorage"):WaitForChild("IncreaseSpeed")
+
+local auto = false
+
+
+--// Screen GUI
+local Gui = Instance.new("ScreenGui")
+Gui.Name = "UltimateWinPanel"
+Gui.ResetOnSpawn = false
+Gui.Parent = game:GetService("CoreGui")
+
+
+--// Main Window
+local Main = Instance.new("Frame")
+Main.Size = UDim2.new(0,520,0,400)
+Main.Position = UDim2.new(0.5,-260,0.5,-200)
+Main.BackgroundColor3 = Color3.fromRGB(18,18,26)
+Main.BorderSizePixel = 0
+Main.Active = true
+Main.Parent = Gui
+
+
+local MainCorner = Instance.new("UICorner")
+MainCorner.CornerRadius = UDim.new(0,22)
+MainCorner.Parent = Main
+
+
+local Border = Instance.new("UIStroke")
+Border.Color = Color3.fromRGB(90,120,255)
+Border.Thickness = 2
+Border.Parent = Main
+
+
+
+--// Title
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1,-70,0,55)
+Title.Position = UDim2.new(0,20,0,5)
+Title.BackgroundTransparency = 1
+Title.Text = "⚡ Ultimate Win Panel"
+Title.Font = Enum.Font.GothamBold
+Title.TextSize = 26
+Title.TextColor3 = Color3.fromRGB(255,255,255)
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.Parent = Main
+
+
+
+--// Close Button
+local Close = Instance.new("TextButton")
+Close.Size = UDim2.new(0,40,0,40)
+Close.Position = UDim2.new(1,-55,0,12)
+Close.Text = "×"
+Close.Font = Enum.Font.GothamBold
+Close.TextSize = 30
+Close.BackgroundColor3 = Color3.fromRGB(220,60,70)
+Close.TextColor3 = Color3.new(1,1,1)
+Close.Parent = Main
+
+local CloseCorner = Instance.new("UICorner")
+CloseCorner.CornerRadius = UDim.new(1,0)
+CloseCorner.Parent = Close
+
+
+Close.MouseButton1Click:Connect(function()
+	Gui:Destroy()
+end)
+
+
+
+--// Tabs
+local TabFrame = Instance.new("Frame")
+TabFrame.Size = UDim2.new(1,-40,0,45)
+TabFrame.Position = UDim2.new(0,20,0,65)
+TabFrame.BackgroundTransparency = 1
+TabFrame.Parent = Main
+
+
+
+local function CreateTab(text,pos)
+
+	local button = Instance.new("TextButton")
+
+	button.Size = UDim2.new(0.5,-5,1,0)
+	button.Position = UDim2.new(pos,0,0,0)
+	button.BackgroundColor3 = Color3.fromRGB(35,35,50)
+	button.Text = text
+	button.Font = Enum.Font.GothamBold
+	button.TextSize = 16
+	button.TextColor3 = Color3.new(1,1,1)
+	button.Parent = TabFrame
+
+
+	local corner = Instance.new("UICorner")
+	corner.CornerRadius = UDim.new(0,12)
+	corner.Parent = button
+
+
+	return button
+end
+
+
+local TeleTab = CreateTab("🏆 Teleports",0)
+local AutoTab = CreateTab("⚡ Auto",0.5)
+
+
+
+--// Pages
+local function CreatePage()
+
+	local page = Instance.new("Frame")
+	page.Size = UDim2.new(1,-40,1,-130)
+	page.Position = UDim2.new(0,20,0,120)
+	page.BackgroundTransparency = 1
+	page.Parent = Main
+
+	return page
+end
+
+
+local TelePage = CreatePage()
+local AutoPage = CreatePage()
+
+AutoPage.Visible = false
+
+
+
+--// Search Box
+local Search = Instance.new("TextBox")
+Search.Size = UDim2.new(1,0,0,35)
+Search.BackgroundColor3 = Color3.fromRGB(30,30,42)
+Search.PlaceholderText = "🔍 Search teleport..."
+Search.Text = ""
+Search.Font = Enum.Font.Gotham
+Search.TextSize = 15
+Search.TextColor3 = Color3.new(1,1,1)
+Search.Parent = TelePage
+
+
+local SearchCorner = Instance.new("UICorner")
+SearchCorner.CornerRadius = UDim.new(0,10)
+SearchCorner.Parent = Search
+
+
+
+--// Scrolling List
+local Scroll = Instance.new("ScrollingFrame")
+Scroll.Size = UDim2.new(1,0,1,-45)
+Scroll.Position = UDim2.new(0,0,0,45)
+Scroll.BackgroundTransparency = 1
+Scroll.ScrollBarThickness = 5
+Scroll.CanvasSize = UDim2.new(0,0,0,0)
+Scroll.Parent = TelePage
+
+
+local Layout = Instance.new("UIListLayout")
+Layout.Padding = UDim.new(0,8)
+Layout.Parent = Scroll
 --// Modern Win Panel Part 2
 --// Teleports + Auto + Dragging
 
